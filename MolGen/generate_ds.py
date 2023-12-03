@@ -2,6 +2,7 @@ import os
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
+from torch import nn
 from datetime import datetime
 from tqdm import tqdm
 import numpy as np

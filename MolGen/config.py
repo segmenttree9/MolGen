@@ -102,6 +102,15 @@ class cfg():
                             help='number of distributed processes')
         parser.add_argument('--dist-url', default='env://', help='url used to set up distributed training')
         parser.add_argument("--local_rank", default=-1, type=int)
+
+        # save prefix
+        parser.add_argument('--wte_path', type=str, help="wte")
+        parser.add_argument('--control_trans_path', type=str, help="control_trans")
+        parser.add_argument('--wte_enc_path', type=str, help="wte_enc")
+        parser.add_argument('--control_trans_enc_path', type=str, help="control_trans_enc")
+        parser.add_argument('--wte_dec_path', type=str, help="wte_dec")
+        parser.add_argument('--control_trans_dec_path', type=str, help="control_trans_dec")
+
         
         parser = deepspeed.add_config_arguments(parser)
         self.cfg = parser.parse_args()
