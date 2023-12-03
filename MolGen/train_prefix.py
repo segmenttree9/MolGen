@@ -297,7 +297,7 @@ class Runner:
                     self.update_loss_log()
                     self.writer.add_scalars("lr", {"lr": self.lr}, self.step)
 
-            if self.step % 10 == 0:
+            if self.step % 20000 == 0:
                 self.model_engine.save_checkpoint(save_dir=os.path.join(self.logger_path, 'model'), client_state={'checkpoint_step': self.step})
 
     def get_learning_rate(self):
