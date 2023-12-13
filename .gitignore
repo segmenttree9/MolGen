@@ -1,5 +1,7 @@
 *.pkl
 *.csv
 *.output
-
-
+*.pyc
+facebook/
+__*__/
+dump/

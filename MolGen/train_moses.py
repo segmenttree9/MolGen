@@ -43,7 +43,7 @@ class Runner:
     
 
     def data_init(self):
-        self.tokenizer = BartTokenizer.from_pretrained('facebook/bart-base')
+        self.tokenizer = BartTokenizer.from_pretrained('/home/jqyang/jqyang/MolGen/MolGen/MolGen/facebook/bart-base')
         unwanted_words = [i for i in self.tokenizer.encoder.keys()]
         
         important_tokens = ['<s>','<pad>','</s>','<unk>']
@@ -185,8 +185,9 @@ class Runner:
                 self.train(_tqdm)
                 _tqdm.update(1)
 
-        if self.rank == 0:
-            self.model_engine.save_checkpoint(save_dir=os.path.join(self.logger_path, 'model'), client_state={'checkpoint_step': self.step})
+        
+        self.model_engine.save_checkpoint(save_dir=os.path.join(self.logger_path, 'model'), client_state={'checkpoint_step': self.step})
+        self.save_embeddings()
 
     def get_prompt(self, bsz=None):
         old_bsz = bsz
