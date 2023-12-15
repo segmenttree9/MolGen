@@ -8,7 +8,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit import DataStructs
 from rdkit.Chem import Descriptors
-# from score_modules.SA_Score import sascorer
+from score_modules.SA_Score import sascorer
 import selfies as sf
 from rdkit.Chem import QED
 import os

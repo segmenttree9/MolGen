@@ -53,8 +53,8 @@ class Runner:
         self.tokenizer.add_tokens(selfies_tokens, special_tokens=False)
         self.tokenizer.add_tokens('<mask>', special_tokens=True)
         self.model.resize_token_embeddings(len(self.tokenizer))
-        self.model.load_state_dict(torch.load(self.args.checkpoint_path, map_location='cpu'),strict=False)
-
+        ss = self.model.load_state_dict(torch.load(self.args.checkpoint_path, map_location='cpu'),strict=True)
+        print(ss)
         self.config = self.model.config
         self.match_n_layer = self.config.decoder_layers
         self.match_n_head = self.config.decoder_attention_heads
@@ -68,31 +68,31 @@ class Runner:
         self.input_tokens = torch.arange(self.preseqlen).long().cuda()
         
         self.wte = nn.Embedding(self.preseqlen, self.n_embd).cuda()
-        self.wte.load_state_dict(torch.load(self.args.wte_path, map_location='cpu'),strict=False)   # add!
+        self.wte.load_state_dict(torch.load(self.args.wte_path, map_location='cpu'),strict=True)   # add!
         self.control_trans = nn.Sequential(
             nn.Linear(self.n_embd, self.mid_dim),
             nn.Tanh(),
             nn.Linear(self.mid_dim, self.match_n_layer * 2 * self.match_n_head * self.match_n_embd),
         ).cuda()
-        self.control_trans.load_state_dict(torch.load(self.args.control_trans_path, map_location='cpu'),strict=False) # add!
+        self.control_trans.load_state_dict(torch.load(self.args.control_trans_path, map_location='cpu'),strict=True) # add!
 
         self.wte_enc = nn.Embedding(self.preseqlen, self.n_embd).cuda()
-        self.wte_enc.load_state_dict(torch.load(self.args.wte_enc_path, map_location='cpu'),strict=False) # add!
+        # self.wte_enc.load_state_dict(torch.load(self.args.wte_enc_path, map_location='cpu'),strict=False) # add!
         self.control_trans_enc = nn.Sequential(
             nn.Linear(self.n_embd, self.mid_dim),
             nn.Tanh(),
             nn.Linear(self.mid_dim, self.match_n_layer * 2 * self.match_n_head * self.match_n_embd),
         ).cuda()
-        self.control_trans_enc.load_state_dict(torch.load(self.args.control_trans_enc_path, map_location='cpu'),strict=False) # add!
+        self.control_trans_enc.load_state_dict(torch.load(self.args.control_trans_enc_path, map_location='cpu'),strict=True) # add!
 
         self.wte_dec = nn.Embedding(self.preseqlen, self.n_embd).cuda()
-        self.wte_dec.load_state_dict(torch.load(self.args.wte_dec_path, map_location='cpu'),strict=False) # add!
+        # self.wte_dec.load_state_dict(torch.load(self.args.wte_dec_path, map_location='cpu'),strict=False) # add!
         self.control_trans_dec = nn.Sequential(
             nn.Linear(self.n_embd, self.mid_dim),
             nn.Tanh(),
             nn.Linear(self.mid_dim, self.match_n_layer * 2 * self.match_n_head * self.match_n_embd),
         ).cuda()
-        self.control_trans_dec.load_state_dict(torch.load(self.args.control_trans_dec_path, map_location='cpu'),strict=False) # add!
+        self.control_trans_dec.load_state_dict(torch.load(self.args.control_trans_dec_path, map_location='cpu'),strict=True) # add!
         
         
         if self.rank == 0:
@@ -334,7 +334,8 @@ class Runner:
                 
     def generate_candidate_selfies(self):
         self.model_engine, _, _, self.scheduler = deepspeed.initialize(self.args, model=self.model,
-                                                        model_parameters=self.model.parameters())
+                                                        model_parameters=self.model.parameters(),
+                                                        )
         self.model_engine.eval()
         if rank == 0:
             self.logger.info(f'start generating with {self.args.generate_mode} ...')
